@@ -1,11 +1,8 @@
 import React from 'react';
 
 
-var Review = React.createClass({
+export default class Review extends React.Component {
   render() {
-    return <h1>Reviewer Tools</h1>;
+    return <h1>Reviewer Tools</h1>
   }
-});
-
-
-export default Review;
+}
