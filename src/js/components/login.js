@@ -14,16 +14,13 @@ import Url from 'urlgray';
 import Login from './handlers/login';
 
 
-let FxaLogin = React.createClass({
+class FxaLogin extends React.Component {
   /* After login, FxA OAuth redirects to this handler which is within a popup.
      Retrieves the auth info from the URL and postmessage back to opener.
      Note this handler is currently not used in production, but rather
      Fireplace's /fxa-authorize handler, but it'll work since every app will
      be proxied onto the same domain.
   */
-  contextTypes: {
-    router: React.PropTypes.func
-  },
   componentDidMount() {
     const {router} = this.context;
 
@@ -32,7 +29,7 @@ let FxaLogin = React.createClass({
       window.opener.postMessage({auth_code: window.location.href},
                                 window.location.origin);
     }
-  },
+  }
   isPopup() {
     try {
         if (window.opener.location.protocol == window.location.protocol &&
@@ -42,52 +39,47 @@ let FxaLogin = React.createClass({
     } catch (e) {
       return false;
     }
-  },
+  }
   render() {
     return <h1>Processing Firefox Accounts authorization&hellip;</h1>
   }
-});
-export {FxaLogin as FxaLogin};
+}
+FxaLogin.contextTypes = {
+  router: React.PropTypes.func
+};
+export {FxaLogin};
 
 
-let LoginButton = React.createClass({
+class LoginButton extends React.Component {
   // Wrapper around FxA login button to connect to Marketplace's API.
-  propTypes: {
-    signup: React.PropTypes.bool
-  },
   siteConfigStateGetter(siteConfig) {
     return siteConfig.getAuthInfo(this.props.signup);
-  },
+  }
   render() {
     return <FluxComponent
-              connectToStores={{siteConfig: this.siteConfigStateGetter}}>
+              connectToStores={{siteConfig: this.siteConfigStateGetter.bind(this)}}>
       <FxaLoginButton signup={this.props.signup}/>
     </FluxComponent>
   }
-});
-export {LoginButton as LoginButton};
+}
+LoginButton.propTypes = {
+  signup: React.PropTypes.bool
+};
+export {LoginButton};
 
 
-let FxaLoginButton = React.createClass({
+class FxaLoginButton extends React.Component {
   // Opens up an FxA login popup window.
- propTypes: {
-    authUrl: React.PropTypes.string,
-    authState: React.PropTypes.string,
-    content: React.PropTypes.any,
-    localDevClientId: React.PropTypes.string,
-    signup: React.PropTypes.bool
-  },
-  getInitialState() {
-    return {
-      loggingIn: false
-    };
-  },
+  constructor() {
+    super();
+    this.state = { loggingIn: false };
+  }
   componentDidMount() {
-    window.addEventListener('message', this.handlePostMessage);
-  },
+    window.addEventListener('message', this.handlePostMessage.bind(this));
+  }
   componentWillUnmount() {
     window.removeEventListener('message', this.handlePostMessage);
-  },
+  }
   handlePostMessage(msg) {
     var origins = [process.env.API_ROOT, window.location.origin];
     if (msg.data && msg.data.auth_code && origins.indexOf(msg.origin) !== -1) {
@@ -96,7 +88,7 @@ let FxaLoginButton = React.createClass({
             msg.data.auth_code, this.props.authState,
             this.props.localDevClientId);
     }
-  },
+  }
   openPopup() {
     const w = this.props.popupWidth || 320;
     const h = this.props.popupHeight || 600;
@@ -119,7 +111,7 @@ let FxaLoginButton = React.createClass({
         }
       }, 500);
     });
-  },
+  }
   startLogin() {
     const root = this;
     root.setState({
@@ -132,32 +124,39 @@ let FxaLoginButton = React.createClass({
         loggingIn: false
       });
     });
-  },
+  }
   render() {
     var btnClasses = classnames({
       login: true,
       ['login--register']: this.props.signup,
     });
-    return <button className={btnClasses} onClick={this.startLogin}>
+    return <button className={btnClasses} onClick={this.startLogin.bind(this)}>
       {this.props.content || this.props.signup ? 'Register' : 'Login'}
     </button>;
   }
-});
-export {FxaLoginButton as FxaLoginButton};
+}
+FxaLoginButton.propTypes = {
+  authUrl: React.PropTypes.string,
+  authState: React.PropTypes.string,
+  content: React.PropTypes.any,
+  localDevClientId: React.PropTypes.string,
+  signup: React.PropTypes.bool
+};
+export {FxaLoginButton};
 
 
-let LogoutButton = React.createClass({
+class LogoutButton extends React.Component {
   logout() {
     // Trigger Logout action.
     this.props.flux.getActions('login').logout();
-  },
+  }
   render() {
-    return <button className="logout" onClick={this.logout}>
+    return <button className="logout" onClick={this.logout.bind(this)}>
       {this.props.content || 'Logout'}
     </button>
   }
-});
-export {LogoutButton as LogoutButton};
+}
+export {LogoutButton};
 
 
 const loginRequired = Component => {
@@ -176,4 +175,4 @@ const loginRequired = Component => {
     })
   }); 
 };
-export {loginRequired as loginRequired};
+export {loginRequired};

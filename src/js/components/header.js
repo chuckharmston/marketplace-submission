@@ -4,13 +4,13 @@ import React from 'react';
 import {LoginButton, LogoutButton} from './login';
 
 
-let Header = React.createClass({
+export default class Header extends React.Component {
   userStateGetter(user) {
     return {
       displayName: user.getDisplayName(),
       isLoggedIn: user.isLoggedIn()
     };
-  },
+  }
   render() {
     return <header>
       <div className="header--wordmark">
@@ -22,14 +22,10 @@ let Header = React.createClass({
       </FluxComponent>
     </header>
   }
-});
+}
 
 
-let HeaderLogin = React.createClass({
-  propTypes: {
-    displayName: React.PropTypes.string,
-    isLoggedIn: React.PropTypes.bool.isRequired,
-  },
+class HeaderLogin extends React.Component {
   render() {
     if (this.props.isLoggedIn) {
       return <div className="header--login">
@@ -45,7 +41,9 @@ let HeaderLogin = React.createClass({
       </div>
     }
   }
-});
-
-
-export default Header;
+}
+HeaderLogin.propTypes = {
+  displayName: React.PropTypes.string,
+  isLoggedIn: React.PropTypes.bool.isRequired,
+};
+export {HeaderLogin};

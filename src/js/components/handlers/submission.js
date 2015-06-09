@@ -8,6 +8,7 @@ import Wizard from '../wizard';
 const urlStep = {
   title: 'Step 1: Website URL',
   onSubmit: (form, flux) => {
+    console.log('SUBMIT');
     flux.getActions('submission').submitUrl(
       form.elements.submissionUrl.value);
   },
@@ -18,10 +19,10 @@ const urlStep = {
            required/>
     <button type="submit">Submit</button>
   </form>
-}
+};
 
 
-const CompatStepForm = connectToStores(React.createClass({
+const CompatStepForm = connectToStores(class extends React.Component {
   render() {
     return <form>
       <label>URL:</label>
@@ -29,7 +30,7 @@ const CompatStepForm = connectToStores(React.createClass({
       <img src={this.props.screenshot}/>
     </form>
   }
-}), 'submission');
+}, 'submission');
 
 
 const compatStep = {
@@ -37,7 +38,7 @@ const compatStep = {
   onSubmit: () => {
   },
   form: <CompatStepForm/>
-}
+};
 
 
 const metadataStep = {
@@ -46,11 +47,11 @@ const metadataStep = {
   },
   form: <form>
     <p>Under construction</p>
-  </form>,
-}
+  </form>
+};
 
 
-const Submission = React.createClass({
+export default class Submission extends React.Component {
   render() {
     const steps = [urlStep, compatStep, metadataStep];
 
@@ -64,7 +65,4 @@ const Submission = React.createClass({
               goToStep={goToStep}/>
     </FluxComponent>
   }
-});
-
-
-export default Submission;
+}
