@@ -6,8 +6,8 @@ import Footer from './footer';
 import Header from './header';
 
 
-var App = React.createClass({
-  render: function () {
+export default class App extends React.Component {
+  render() {
     return <div className="app">
       <Header/>
       <main>
@@ -18,7 +18,4 @@ var App = React.createClass({
       <Footer/>
     </div>
   }
-});
-
-
-export default App;
+}
