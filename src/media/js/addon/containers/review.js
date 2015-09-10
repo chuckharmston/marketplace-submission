@@ -6,7 +6,7 @@ import {bindActionCreators} from 'redux';
 import {fetch, publish, reject} from '../actions/review';
 import {AddonListing} from '../components/addon';
 import AddonSubnav from '../components/addonSubnav';
-import listify from '../selectors/listify';
+import {addonListSelector} from '../selectors/addon';
 import PageHeader from '../../site/components/pageHeader';
 
 
@@ -31,7 +31,8 @@ export class AddonReview extends React.Component {
   render() {
     return (
       <section>
-        <PageHeader title="Reviewing Firefox OS Add-ons" subnav={<AddonSubnav/>}/>
+        <PageHeader title="Reviewing Firefox OS Add-ons"
+                    subnav={<AddonSubnav/>}/>
         <AddonListing addons={this.props.addons}
                       isReview={true}
                       publish={this.props.publish}
@@ -44,7 +45,7 @@ export class AddonReview extends React.Component {
 
 export default connect(
   state => ({
-    addons: listify(state.addonReview.addons)
+    addons: addonListSelector(state.addonReview.addons)
   }),
   dispatch => bindActionCreators({
     fetch,

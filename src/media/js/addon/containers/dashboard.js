@@ -6,7 +6,7 @@ import {bindActionCreators} from 'redux';
 import {fetch} from '../actions/dashboard';
 import {AddonListing} from '../components/addon';
 import AddonSubnav from '../components/addonSubnav';
-import listify from '../selectors/listify';
+import {addonListSelector} from '../selectors/addon';
 import PageHeader from '../../site/components/pageHeader';
 
 
@@ -39,7 +39,7 @@ export class AddonDashboard extends React.Component {
 
 export default connect(
   state => ({
-    addons: listify(state.addonDashboard.addons)
+    addons: addonListSelector(state.addonDashboard.addons)
   }),
   dispatch => bindActionCreators({
     fetch

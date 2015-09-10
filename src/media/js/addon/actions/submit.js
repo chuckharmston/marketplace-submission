@@ -114,7 +114,7 @@ export function create() {
 
     req
       .post(createUrl)
-      .send({upload: getState().addonSubmit.validationId})
+      .send({validation_id: getState().addonSubmit.validationId})
       .then(res => {
         dispatch(submitOk(res.body));
       }, err => {
