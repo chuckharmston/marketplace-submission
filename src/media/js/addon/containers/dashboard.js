@@ -70,8 +70,9 @@ export class AddonDashboard extends React.Component {
           }
         </div>
 
-        <AddonListingForDashboard addons={this.props.addons}
-                      linkTo="addon-dashboard-detail"/>
+        <AddonListingForDashboard
+          addons={addonListSelector(this.props.addons, true)}
+          linkTo="addon-dashboard-detail"/>
       </Page>
     );
   }
